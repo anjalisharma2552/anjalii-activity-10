@@ -1,66 +1,58 @@
-#include <stdio.h>
-struct fraction
-{
-int num;
-int den;
-};
-typedef struct fraction Fract;
-Fract input()
-{
-Fract f;
-printf("enter numerator");
-scanf("%d",&f.num);
-printf("enter denominator");
-scanf("%d",&f.den);
-return f;
+
+#include<stdio.h>
+
+typedef struct {
+    int num, den;
+}Fraction;
+
+int input() {
+    int n;
+    scanf("%d", &n);
+    return n;
 }
-int gcd(int a, int b) {
-int i,gcd=1;
-for(i=2; i <= a && i <= b; ++i)
-{
-if(a%i==0 && b%i==0)
-gcd = i;
+
+int gcd(int a, int b) { 
+    if (a == 0)
+        return b; 
+    return gcd(b % a, a); 
 }
-return gcd;
+
+int lcm(int denominator[], int n) { 
+    int ans = denominator[0]; 
+    for (int i = 1; i < n; i++) 
+        ans = (((denominator[i] * ans)) / (gcd(denominator[i], ans)));
+    return ans; 
+} 
+
+void display(Fraction sum) {
+    int commonFactor = gcd(sum.num, sum.den); 
+    sum.den = sum.den/commonFactor; 
+    sum.num = sum.num/commonFactor;
+    printf("Sum = %d / %d", sum.num, sum.den);
 }
-int lcm(Fract arr[])
-{
-int ans;
-ans=arr[0].den;
-for(int i=1;i<t;i++)
-ans=(ans*arr[i].den)/gcd(ans,ar
-ans=(ans*arr[i].den)/gcd(ans,arr[i].den);
-return ans;
+
+void add(int numerator[], int denominator[], int n) {
+    Fraction sum = {0, 0};
+    sum.den = lcm(denominator, n);
+    for (int i=0; i<n; i++) {
+        sum.num += (numerator[i] * sum.den/denominator[i]);
+    }
+    display(sum);
 }
-Fract add_frac(Fract arr[],int fd){
-Fract sum;
-sum.num=0;
-for(int i=0;i<t;i++)
-sum.num=sum.num +arr[i].num*(fd/arr[i].den);
-sum.den=fd;
-return sum;
-}
-void output(Fract sum)
-{
-if(sum.num==0)
-printf("Sum = 0\n");
-else if(sum.num==sum.den)
-printf("Sum = 1\n");
-else
-printf("Sum = %d/%d\n",sum.num,sum.den);
-}
-// Driver program
-int main()
-{
-Fract sum;
-int t;
-printf("Enter the number of Fractions to be entered:\n");
-scanf("%d",&t);
-Fract array[t];
-for(int i=0;i<t;i++)
-array[i]=input();
-int fd=lcm(array,t);
-sum=add_frac(array,fd,t);
-output(sum);
-return 0;
+
+int main() {
+    int n, a, b;
+    n = input();
+    int numerator[n], denominator[n];
+    printf("Enter the numerators: \n");
+    for (int i=0; i<n; i++) {
+        a = input();
+        numerator[i] = a;
+    }
+    printf("Enter the denominators: \n");
+    for (int i=0; i<n; i++) {
+        b = input();
+        denominator[i] = b;
+    }
+    add(numerator, denominator, n);
 }
